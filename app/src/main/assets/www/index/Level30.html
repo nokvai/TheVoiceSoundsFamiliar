@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<script src='../js/jquery-3.2.1.js' type='text/javascript'></script>-->
+    <!--<script src='../js/musicHelper.js' type='text/javascript'></script>-->
+    <!--<script src='../js/clickSound.js' type='text/javascript'></script>-->
+    <!--<link href="../css/CustomStyles.css" rel="stylesheet" type="text/css" >-->
+	<script src='file:///android_asset/www/js/jquery-3.2.1.js' type='text/javascript'></script>
+	<script src='file:///android_asset/www/js/musicHelper.js' type='text/javascript'></script>
+	<script src='file:///android_asset/www/js/clickSound.js' type='text/javascript'></script>
+	<link href="file:///android_asset/www/css/CustomStyles.css" rel="stylesheet" type="text/css" >
+    <script>
+        $(document).ready(function() {
+
+        	 function showTheme() {
+                $("body").css({"background-image": "url(" + mygame.getChangeTheme(Number(1)) + ")"});
+                $("body").addClass("bg");
+             } showTheme();
+
+			var player_id = "";
+
+			function setValueBack(id) {
+				var qString = "?id=" + id;
+				window.location.href = "file:///android_asset/www/index/SelectLevel.html" + qString;
+			}
+
+            $("#btnBack").click(function() {
+                clickSound();
+                setTimeout(function() {
+					setValueBack(player_id);
+                }, 400);
+            });
+
+			function getValue() {
+				var queryString = decodeURIComponent(window.location.search);
+				queryString = queryString.substring(1);
+				var queries = queryString.split("&");
+				var result = [];
+				for (var i = 0; i < queries.length; i++) {
+				  result.push( queries[i].split("=") );
+				}
+				return result;
+			}
+
+			var level = getValue()[0][1];
+			player_id = getValue()[1][1];
+			var player = mygame.getPlayer(Number(player_id)).split(',');
+ 			var player_name = player[1];
+
+			function setValue(qn, id, lv) {
+				queryString = "?qn=" + qn +
+								  "&id=" + id +
+								  "&lv=" + lv;
+
+				if (lv == "b") {
+					window.location.href = "file:///android_asset/www/index/Beginner.html" + queryString;
+				} else if (lv == "a") {
+					window.location.href = "file:///android_asset/www/index/Advance.html" + queryString;
+				} else if (lv == "e") {
+					window.location.href = "file:///android_asset/www/index/Expert.html" + queryString;
+				}
+			}
+
+			$("body div").hide();
+			$("#loader").show();
+
+			function generateSongs() {
+				var songs = mygame.getSongs(Number(player_id), level).split(',');
+				var length = (songs.length - 1);
+
+				if (length > 0) {
+					/* for (var i=0; i < length ;i++) {
+						var s = songs[i].split('&');
+						str += "Index: " + s[2] + " Name: " + s[1] + "\n\n";
+					} */
+				} else {
+					var song30 = mygame.getNewRandomSongs(level).split(',');
+						var cnt = (song30.length - 1);
+						var n = 0;
+						for (var x=0; x < cnt; x++) {
+							setTimeout(function() {
+									mygame.addSong(
+												Number(player_id),
+												song30[n],
+												Number(n),
+												level,
+												Number("0"),
+												Number("0"),
+												Number("0"),
+												Number("0")
+									);
+									n += 1;
+								}, 10);
+						}
+				}
+			}
+
+			generateSongs();
+
+
+
+
+			function yourLevel(l) {
+				if (l == "b") { return "Beginner"; }
+				else if (l == "a") { return "Advance"; }
+				else if (l == "e") { return "Expert"; }
+			}
+
+			$("#title").text( player_name + "'s " + yourLevel(level) + " Level");
+
+			function sortLeaderBoard(col_no) {
+			  var table, rows, switching, i, x, y, shouldSwitch;
+			  table = $("#tableLeaderBoard tbody"); //document.getElementById("tableLeaderBoard");
+			  switching = true;
+			  while (switching) {
+				switching = false;
+				rows = table.find("tr");// getElementsByTagName("TR");
+				for (i = 0; i < rows.length; i++) {
+				  shouldSwitch = false;
+				  //x = rows[i].getElementsByTagName("TD")[col_no];
+				  //y = rows[i + 1].getElementsByTagName("TD")[col_no];
+
+				  x = $(rows[i]).find("td")[col_no];
+				  y = $(rows[i + 1]).find("td")[col_no];
+
+				  try {
+					 if (Number($(x)[0].innerHTML.toLowerCase()) < Number($(y)[0].innerHTML.toLowerCase())) {
+						  shouldSwitch= true;
+						  break;
+					 }
+			 	  } catch  (e) { shouldSwitch = false; }
+				}
+				if (shouldSwitch) {
+				  rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+				  switching = true;
+				}
+			  }
+
+			  var trows = table.find("tr");
+			  for (var z = 0; z < rows.length; z++) {
+					$(trows[z]).find("td")[0].innerHTML = "Rank " + (z + 1);
+					if( $(trows[z]).find("td")[1].innerHTML == player_name) {
+						$(trows[z]).css({"background-color": "#0074d9"});
+					}
+			  }
+			}
+
+			function DisableFinishedButtons() {
+
+				var songs = mygame.getFinishedSongsByIdLevelIndex(Number(player_id), level).split(',');
+				for(var z=0;z < (songs.length - 1); z++ ) {
+						var s = songs[z].split('&');
+						var index = (Number(s[2]) + 1);
+						$("#btn" + index).css({"display": "none"});
+				}
+
+			}
+
+			function leaderBoard() {
+				var songs = mygame.getFinishedSongsByIdLevelIndex(Number(player_id), level).split(',');
+
+				if (Number(songs.length - 1) === 30) {
+
+					var tbl = $("#tableLeaderBoard tbody");
+					var players = mygame.getAllPlayer().split(',');
+					for (var i=0;i< (players.length - 1);i++) {
+						var p = players[i].split('&');
+						var playername = p[1];
+						var points = getPoints(Number(p[0]), level).split(','); //score, no. of wrong, points deducted
+
+						var final_score = Number(p[3]);
+						var score = Number( points[0] );
+						var wrong = Number( points[1] );
+						var deduct = Number( points[2] );
+						var overall_score = ((final_score + score) - deduct);
+
+						var tr = $('<tr/>');
+						var td0 = $('<td/>');
+						var td1 = $('<td/>');
+						var td2 = $('<td/>');
+						tr.attr("id", p[0]); // id
+						td0.append("Place " + (i+1));
+						td1.append(playername);
+						td2.append(overall_score);
+						tr.append(td0);
+						tr.append(td1);
+						tr.append(td2);
+						tbl.append(tr);
+					}
+
+					$("#leaderBoard").show();
+					$("#btnViewFinished").show();
+					sortLeaderBoard(2);
+
+
+				} else if (Number(songs.length - 1) < 30) {
+					$("#leaderBoard").hide();
+				}
+			}
+
+			function levelPointsIsPassed() {
+
+					var dbsongs = mygame.getSongs(Number(player_id), level).split(',');
+					var dblength = (dbsongs.length - 1);
+
+					var finishedsongs = mygame.getFinishedSongsByIdLevelIndex(Number(player_id), level).split(',');
+					var finishedlength = (finishedsongs.length - 1);
+
+
+					var pnts = getPoints(Number(player_id), level).split(',');
+					var pyr = mygame.getPlayer(Number(player_id)).split(',');
+					var fin_score = Number(pyr[3]);
+					var scr = Number( pnts[0] );
+					var ded = Number( pnts[2] );
+					var overall_score = ((fin_score + scr) - ded);
+					var passed = 0;
+
+					if (dblength == 30) {
+						if (finishedlength == 30) {
+							if (level == 'b') {
+								if (overall_score > 80) {
+									passed = 1;
+								} else if (overall_score < 80) {
+									passed = 0;
+								}
+							} else if (level == 'a') {
+								if (overall_score > 100) {
+									passed = 1;
+								} else if (overall_score < 100) {
+									passed = 0;
+								}
+							} else if (level == 'e') {
+								if (overall_score > 100) {
+									passed = 1;
+								} else if (overall_score < 100) {
+									passed = 0;
+								}
+							}
+						}
+					} else if (dblength > 30) {
+						passed = 2;
+					}
+
+
+				return passed;
+			}
+
+			function showPointsHere() {
+				var songs = mygame.getFinishedSongsByIdLevelIndex(Number(player_id), level).split(',');
+				var players = mygame.getAllPlayer().split(',');
+				for (var i=0;i< (players.length - 1);i++) {
+					var p = players[i].split('&');
+					if ( Number(player_id) === Number(p[0]) ) {
+						var playername = p[1];
+						var points = getPoints(Number(p[0]), level).split(','); //score, no. of wrong, points deducted
+						var final_score = Number(p[3]);
+						var score = Number( points[0] );
+						var wrong = Number( points[1] );
+						var deduct = Number( points[2] );
+						var overall_score = ((final_score + score) - deduct);
+
+						$("#title").text( playername + "'s " + yourLevel(level) + " Level" + " - " + overall_score + " Points");
+					}
+				}
+			}
+
+			showPointsHere();
+
+			function getPoints(id, lvl) {
+					var songs = mygame.getFinishedSongsByIdLevelIndex(Number(id), lvl).split(',');
+					var score = 0;
+					var cnt_wrong = 0;
+					var cnt_hint = 0;
+					var hint_subtract = 0;
+					for(var z=0;z < (songs.length - 1); z++ ) {
+						var s = songs[z].split('&');
+						var index = (Number(s[2]) + 1);
+						if (Number(s[5]) > 0) {
+							cnt_hint++;
+						}
+						if (Number(s[6]) == 0) {
+							cnt_wrong++;
+						}
+						score += Number(s[6]);
+					}
+					if( cnt_hint == 1 ) { hint_subtract = 40; }
+					else if( cnt_hint == 2 ) { hint_subtract = 80; }
+					else if( cnt_hint == 3 ) { hint_subtract = 120; }
+					score = Number(score);// - Number(hint_subtract) );
+					var player = mygame.getPlayer(Number(player_id));
+					var playerScore = Number(player[3]);
+
+					return score + "," + cnt_wrong + "," + hint_subtract + ",";
+			}
+
+
+			setTimeout(function() {
+
+				$("body div").show();
+
+				DisableFinishedButtons();
+
+				$("#btn1").click(function() { clickSound(); setTimeout(function() { setValue("0", player_id, level); }, 400); });
+				$("#btn2").click(function() { clickSound(); setTimeout(function() { setValue("1", player_id, level); }, 400); });
+				$("#btn3").click(function() { clickSound(); setTimeout(function() { setValue("2", player_id, level); }, 400); });
+				$("#btn4").click(function() { clickSound(); setTimeout(function() { setValue("3", player_id, level); }, 400); });
+				$("#btn5").click(function() { clickSound(); setTimeout(function() { setValue("4", player_id, level); }, 400); });
+				$("#btn6").click(function() { clickSound(); setTimeout(function() { setValue("5", player_id, level); }, 400); });
+				$("#btn7").click(function() { clickSound(); setTimeout(function() { setValue("6", player_id, level); }, 400); });
+				$("#btn8").click(function() { clickSound(); setTimeout(function() { setValue("7", player_id, level); }, 400); });
+				$("#btn9").click(function() { clickSound(); setTimeout(function() { setValue("8", player_id, level); }, 400); });
+				$("#btn10").click(function() { clickSound(); setTimeout(function() { setValue("9", player_id, level); }, 400); });
+
+				$("#btn11").click(function() { clickSound(); setTimeout(function() { setValue("10", player_id, level); }, 400); });
+				$("#btn12").click(function() { clickSound(); setTimeout(function() { setValue("11", player_id, level); }, 400); });
+				$("#btn13").click(function() { clickSound(); setTimeout(function() { setValue("12", player_id, level); }, 400); });
+				$("#btn14").click(function() { clickSound(); setTimeout(function() { setValue("13", player_id, level); }, 400); });
+				$("#btn15").click(function() { clickSound(); setTimeout(function() { setValue("14", player_id, level); }, 400); });
+				$("#btn16").click(function() { clickSound(); setTimeout(function() { setValue("15", player_id, level); }, 400); });
+				$("#btn17").click(function() { clickSound(); setTimeout(function() { setValue("16", player_id, level); }, 400); });
+				$("#btn18").click(function() { clickSound(); setTimeout(function() { setValue("17", player_id, level); }, 400); });
+				$("#btn19").click(function() { clickSound(); setTimeout(function() { setValue("18", player_id, level); }, 400); });
+				$("#btn20").click(function() { clickSound(); setTimeout(function() { setValue("19", player_id, level); }, 400); });
+
+				$("#btn21").click(function() { clickSound(); setTimeout(function() { setValue("20", player_id, level); }, 400); });
+				$("#btn22").click(function() { clickSound(); setTimeout(function() { setValue("21", player_id, level); }, 400); });
+				$("#btn23").click(function() { clickSound(); setTimeout(function() { setValue("22", player_id, level); }, 400); });
+				$("#btn24").click(function() { clickSound(); setTimeout(function() { setValue("23", player_id, level); }, 400); });
+				$("#btn25").click(function() { clickSound(); setTimeout(function() { setValue("24", player_id, level); }, 400); });
+				$("#btn26").click(function() { clickSound(); setTimeout(function() { setValue("25", player_id, level); }, 400); });
+				$("#btn27").click(function() { clickSound(); setTimeout(function() { setValue("26", player_id, level); }, 400); });
+				$("#btn28").click(function() { clickSound(); setTimeout(function() { setValue("27", player_id, level); }, 400); });
+				$("#btn29").click(function() { clickSound(); setTimeout(function() { setValue("28", player_id, level); }, 400); });
+				$("#btn30").click(function() { clickSound(); setTimeout(function() { setValue("29", player_id, level); }, 400); });
+
+				$("#loader").hide();
+
+				var pass = levelPointsIsPassed();
+				if ( pass == 1) {
+					leaderBoard();
+				} else if ( pass == 0 ) {
+					$("#leaderBoard").hide();
+
+					var finishedsongs = mygame.getFinishedSongsByIdLevelIndex(Number(player_id), level).split(',');
+					var finishedlength = (finishedsongs.length - 1);
+					if (finishedlength == 30) {
+						$("#btnUseLastOption").show();
+					}
+
+
+
+				} else if ( pass == 2 ) {
+
+					var queryString = "?level=" + level + "&id=" + player_id;
+					window.location.href = "file:///android_asset/www/index/Level20.html" + queryString;
+				}
+
+			}, 350);
+
+			$("#btnViewFinished").click(function() { clickSound(); setTimeout(function() { setValue("60", player_id, level); }, 400); });
+
+			$("#btnUseLastOption").click(function() {
+
+					var songs = mygame.getSongs(Number(player_id), level).split(',');
+					var length = (songs.length - 1);
+
+					if (length > 30) {
+						/* for (var i=0; i < length ;i++) {
+							var s = songs[i].split('&');
+							str += "Index: " + s[2] + " Name: " + s[1] + "\n\n";
+						} */
+					} else {
+						var song20 = mygame.getLastOptionSongs(Number(player_id), level).split(',');
+							var cnt = (song20.length - 1);
+							var n = 0;
+							var dex = 30;
+							for (var x=0; x < cnt; x++) {
+
+
+										mygame.addSong(
+													Number(player_id),
+													song20[n],
+													Number(dex),
+													level,
+													Number("0"),
+													Number("0"),
+													Number("0"),
+													Number("0")
+										);
+										n += 1;
+										dex += 1;
+
+							}
+					}
+
+					var queryString = "?level=" + level + "&id=" + player_id;
+					window.location.href = "file:///android_asset/www/index/Level20.html" + queryString;
+
+			});
+
+			$("#btnFinishAllSong").click(function() {
+				mygame.setAllSongToFinish(Number(player_id), level);
+				alert('finish it all');
+			});
+
+			$("#btnGetLastOptionSong").click(function() {
+				var sss = mygame.getLastOptionSongs(Number(player_id), level).split(',');
+				var xxx = "";
+				for (var i=0;(sss.length - 1);i++) {
+					xxx += "\n" + sss[i];
+				}
+				alert(xxx);
+			});
+
+
+        });
+
+    </script>
+
+</head>
+
+<body>
+    <h2 id="title" style="text-align:center;">Level</h2>
+
+
+	<div id="leaderBoard" style="text-align: center; display: none;">
+		<div style="height: 35px; background-color: green;">
+			<h3 style="text-align:center; position: relative; top: 5px; color: white;">Leader Board</h3>
+		</div>
+
+		<table class="table-center" id="tableLeaderBoard">
+			<thead>
+			<tr>
+				<th>Rank</th>
+				<th>Player Name</th>
+				<th>Score</th>
+			</tr>
+			</thead>
+			<tbody style="height:160px; overflow-y:auto;">
+			</tbody>
+		</table>
+	</div>
+
+	<div id="loader" style="display: none;z-index: -1;">
+		<img style="position: relative; top: 100px; width: 100%; height: 40px;"; src="file:///android_asset/www/image/animated-overlay.gif" />
+	</div>
+
+    <div style="text-align:center;">
+		<button id="btn1" class="button-number">1</button>&nbsp;
+		<button id="btn2" class="button-number">2</button>&nbsp;
+		<button id="btn3" class="button-number">3</button>&nbsp;
+		<button id="btn4" class="button-number">4</button>&nbsp;
+		<button id="btn5" class="button-number">5</button>&nbsp;
+		<button id="btn6" class="button-number">6</button>&nbsp;
+		<button id="btn7" class="button-number">7</button>&nbsp;
+		<button id="btn8" class="button-number">8</button>&nbsp;
+    </div>
+	<div style="text-align:center; position: relative; top: 9px;">
+		
+		<button id="btn9" class="button-number">9</button>&nbsp;
+		<button id="btn10" class="button-number">10</button>&nbsp;
+		<button id="btn11" class="button-number">11</button>&nbsp;
+		<button id="btn12" class="button-number">12</button>&nbsp;
+		<button id="btn13" class="button-number">13</button>&nbsp;
+		<button id="btn14" class="button-number">14</button>&nbsp;
+		<button id="btn15" class="button-number">15</button>&nbsp;
+		<button id="btn16" class="button-number">16</button>&nbsp;
+    </div>
+	<div style="text-align:center; position: relative; top: 18px;">
+		
+		<button id="btn17" class="button-number">17</button>&nbsp;
+		<button id="btn18" class="button-number">18</button>&nbsp;
+		<button id="btn19" class="button-number">19</button>&nbsp;
+		<button id="btn20" class="button-number">20</button>&nbsp;
+		<button id="btn21" class="button-number">21</button>&nbsp;
+		<button id="btn22" class="button-number">22</button>&nbsp;
+		<button id="btn23" class="button-number">23</button>&nbsp;
+		<button id="btn24" class="button-number">24</button>&nbsp;
+    </div>
+	<div style="text-align:center; position: relative; top: 27px;">
+		<button id="btn25" class="button-number">25</button>&nbsp;
+		<button id="btn26" class="button-number">26</button>&nbsp;
+		<button id="btn27" class="button-number">27</button>&nbsp;
+		<button id="btn28" class="button-number">28</button>&nbsp;
+		<button id="btn29" class="button-number">29</button>&nbsp;
+		<button id="btn30" class="button-number">30</button>&nbsp;
+    </div>
+
+	<div class="center-div" style="text-align:center; position: relative; top: 36px;">
+		<button id="btnUseLastOption" class="button-nav" style="display: none;" >Use Last Option</button>&nbsp;
+		<button id="btnBack" class="button-nav">Back</button>&nbsp;
+		<!--<button id="btnFinishAllSong" class="button-nav">Finish All Song</button>&nbsp;-->
+		<!--<button id="btnGetLastOptionSong" class="button-nav">Get Last Option Song</button>&nbsp;-->
+
+		<button id="btnViewFinished" class="button-nav" style="display: none;" >View Finished</button>
+    </div>
+</body>
+
+</html>

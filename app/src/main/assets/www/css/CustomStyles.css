@@ -1,0 +1,386 @@
+.button-nav {
+          font-weight: bold;
+          border: 5px solid #0074d9;
+          border-radius: 22px;
+          box-shadow: 0 2px #999;
+          display: inline-block;
+          outline: 0;
+          padding: 8px 16px;
+          vertical-align: middle;
+          overflow: hidden;
+          text-decoration: none;
+          font-size: 16px;
+          color: #fff;
+          background-color: #0074d9;
+          text-align: center;
+          cursor: pointer;
+          white-space: nowrap;
+          width: 220px;
+          height: 50px;
+}
+
+
+.button-nav:hover {background-color: #0074d9}
+
+.button-nav:active {
+  background-color: #0074d9;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+* {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
+    -webkit-focus-ring-color: rgba(255, 255, 255, 0) !important;
+    outline: none !important;
+}
+
+
+.button-small {
+          font-weight: bold;
+          border: 5px solid #0074d9;
+          border-radius: 22px;
+          box-shadow: 0 2px #999;
+          display: inline-block;
+          outline: 0;
+          padding: 8px 16px;
+          vertical-align: middle;
+          overflow: hidden;
+          text-decoration: none;
+          font-size: 14px;
+          color: #fff;
+          background-color: #0074d9;
+          text-align: center;
+          cursor: pointer;
+          white-space: nowrap;
+          width: 30px;
+          height: 25px;
+}
+
+
+.button-small:hover {background-color: #0074d9}
+
+.button-small:active {
+  background-color: #0074d9;
+  box-shadow: 0 5px #666;
+  transform: translateY(2px);
+}
+
+
+/*---------------------------------*/
+
+.button-hint {
+          font-weight: bold;
+          border: 5px solid #0074d9;
+          border-radius: 22px;
+          box-shadow: 0 2px #999;
+          display: inline-block;
+          outline: 0;
+          padding: 8px 16px;
+          vertical-align: middle;
+          overflow: hidden;
+          text-decoration: none;
+          font-size: 16px;
+          color: #fff;
+          background-color: red;
+          text-align: center;
+          cursor: pointer;
+          white-space: nowrap;
+          width: 310px;
+          height: 40px;
+          margin-top: 7px;
+          margin-left: 5px;
+}
+
+
+.button-hint:hover {background-color: red}
+
+.button-hint:active {
+  background-color: red;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+/*---------------------------------*/
+
+.show-hint {
+    display: inline;
+}
+
+.hide-hint {
+    display: none;
+}
+
+
+/*---------------------------------*/
+.button-number {
+          font-weight: bold;
+          border: 5px solid #0074d9;
+          border-radius: 5px;
+          box-shadow: 0 2px #999;
+          display: inline-block;
+          outline: 0;
+          padding: 8px 16px;
+          vertical-align: middle;
+          overflow: hidden;
+          text-decoration: none;
+          font-size: 16px;
+          color: #fff;
+          background-color: #0074d9;
+          text-align: center;
+          cursor: pointer;
+          white-space: nowrap;
+          width: 50px;
+          height: 40px;
+}
+
+
+.button-number:hover {background-color: #0074d9}
+
+.button-number:active {
+  background-color: #0074d9;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+/*---------------------------------*/
+.button-letter {
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    padding: 5px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.button-letter:hover {background-color: #0074d9}
+
+.button-letter:active {
+  background-color: #0074d9;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+/*---------------------------------*/
+
+.center-div {
+  display: flex;
+  justify-content: center;
+}
+
+.table-center {
+  align-self: center;
+}
+
+
+#tablePlayer {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 75%;
+	/* border-radius: 10px; */
+	overflow: hidden;
+}
+
+#tablePlayer tbody, #tablePlayer thead, #tablePlayer tr, #tablePlayer td, #tablePlayer th{
+    display:block;
+}
+
+#tablePlayer tr {
+    background-color:  #0074d9;
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#tablePlayer tr.selected {
+	background-color: #4caf50;
+}
+
+#tablePlayer td, #tablePlayer th {
+    border: 1px solid #ddd;
+    padding: 8px;
+	border-bottom: 0px solid white;
+	padding: 10px;
+}
+
+#tablePlayer tr:hover, #tablePlayer tr.selected {background-color: #4caf50;}
+
+#tablePlayer th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #0074d9;
+    color: #000;
+	font-weight: bold;
+}
+/*
+#tablePlayer tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+#tablePlayer tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+}
+*/
+/*----------------------------------------*/
+
+#tableNewPlayer {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+    height: 80px;
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+#tableNewPlayer tr {
+    background-color:  #0074d9;
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#tableNewPlayer td, #tableNewPlayer th {
+    border: 1px solid #ddd;
+    padding: 8px;
+	border-bottom: 0px solid white;
+}
+
+#tableNewPlayer tr:hover, #tableNewPlayer tr.selected {background-color: #4caf50;}
+
+#tableNewPlayer th {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    background-color: #000000;
+    color: #ffffff;
+	font-weight: bold;
+}
+
+#tableNewPlayer tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+#tableNewPlayer tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+}
+
+/*-----------------------------------------*/
+
+
+#tableLeaderBoard {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+/*
+#tableLeaderBoard tbody, #tablePlayer thead, #tablePlayer tr, #tablePlayer td, #tablePlayer th{
+    display:block;
+}
+*/
+#tableLeaderBoard tr {
+    background-color:  #000;
+    font-size: 14px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+}
+/*
+#tableLeaderBoard tr.selected {
+	background-color: #4caf50;
+} */
+
+#tableLeaderBoard td, #tablePlayer th {
+    border: 1px solid #ddd;
+    padding: 8px;
+	border-bottom: 0px solid white;
+	padding: 10px;
+}
+
+#tableLeaderBoard th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: orange;
+    color: #000;
+	font-weight: bold;
+}
+
+/*-----------------------------------------*/
+
+
+#textBoxPlayerName { padding: 5px 5px; line-height: 18px;}
+
+#selectGender { text-align: center; height: 30px; width: 185px; margin-left: 40px;}
+
+/*-----------------------------------------*/
+.circle-text {
+	display: table-cell;
+	height: 60px;
+	width: 60px;
+	
+	text-align: center;
+	border-radius: 50%;
+
+	background: #0074d9;
+	color: #fff;
+	font: 18px "josefin sans", arial;
+}
+
+.rectangle-text {
+  display: table-cell;
+  height: 50px;
+  width: 150px;
+  
+  text-align: center;
+  border-radius: 5px;
+  
+  background-color: #0074d9;
+  color: #fff;
+  font: 16px "josefin sans", arial;
+}
+
+.question-text {
+	color: green;/* #000; */
+	font: 18px 'josefin sans', arial;
+	position: relative;
+	padding: 15px;
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+.bg {
+   height: 50%;
+    /* Center and scale the image nicely */
+   /* background-position: center; */
+   background-repeat: no-repeat;
+   background-size: cover;
+}
+
+
+.game-box-instruction {
+    border: 1px solid #fafafa;
+    color: #737373;
+    background: #fafafa;
+    -webkit-box-shadow: inset 0 0 45px #e7e7e7;
+    -moz-box-shadow: inset 0 0 45px #e7e7e7;
+    box-shadow: inset 0 0 45px #e7e7e7;
+	min-height: 35px;
+    padding: 27px 43px 17px 66px;
+    text-shadow: 1px 1px 1px #fff;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
